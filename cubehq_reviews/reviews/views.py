@@ -1,10 +1,11 @@
-from django.db.models import Avg, Count, OuterRef, Subquery, F
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.pagination import CursorPagination
+from django.db.models import Avg, Count, F, OuterRef, Subquery
 from rest_framework.generics import ListAPIView
-from .models import Category, ReviewHistory, Metadata
-from .serializers import *
+from rest_framework.pagination import CursorPagination
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Metadata, ReviewHistory
+from .serializers import TopCategorySerializer, LatestReviewSerializer
 
 
 class ReviewTrendView(APIView):
@@ -40,7 +41,8 @@ class CategoryReviewView(ListAPIView):
     serializer_class = LatestReviewSerializer
 
     def filter_queryset(self, queryset):
-        """Filters the queryset based on a 'category_id' query parameter.
+        """
+        Filters the queryset based on a 'category_id' query parameter.
 
         If category_id is not present, filters all reviews
         """

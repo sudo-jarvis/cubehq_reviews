@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Category, ReviewHistory, Metadata
+
+from .models import Category, Metadata, ReviewHistory
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

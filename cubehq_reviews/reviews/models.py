@@ -1,9 +1,10 @@
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
 
 class ReviewHistory(models.Model):
-    id = models.BigAutoField(primary_key=True) # Not sure
-    text = models.TextField(null=True) # Text or Char
+    id = models.BigAutoField(primary_key=True)
+    text = models.CharField(max_length=2048, null=True)
     stars = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)])
     review_id = models.CharField(max_length=255)
     created_at = models.DateTimeField()
