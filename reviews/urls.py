@@ -1,3 +1,5 @@
+"""Defines URL patterns for the reviews app."""
+
 from django.urls import path
 
 from reviews import views

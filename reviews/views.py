@@ -1,3 +1,5 @@
+"""Module containing Django views for the [project/app name] app."""
+
 from django.db.models import Avg, Count, F, OuterRef, Subquery
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import CursorPagination
@@ -13,7 +15,7 @@ class ReviewTrendView(ListAPIView):
     queryset = Metadata.objects
 
     def filter_queryset(self, queryset):
-        """Filters the top 5 categories along with total review count and average stars."""
+        """Filter top 5 categories with total review count, average stars."""
         top_category_count = 5  # No. of top categories to be filtered
 
         # Logic to get top categories based on average star rating
@@ -32,7 +34,10 @@ class ReviewTrendView(ListAPIView):
                 name=F("category__name"),
                 description=F("category__description"),
             )
-            .annotate(average_stars=Avg("review__stars"), total_reviews=Count("review"))
+            .annotate(
+                average_stars=Avg("review__stars"),
+                total_reviews=Count("review")
+            )
             .order_by("-average_stars")[:top_category_count]
         )
         # This took a total of 2 django ORM queries(Including 1 Subquery)
