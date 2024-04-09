@@ -24,6 +24,12 @@ Then install the dependencies:
 pip install -r requirements.txt
 ```
 
+Run any migrations present:
+
+```sh
+python manage.py migrate
+```
+
 Once `pip` has finished downloading the dependencies:
 
 ```sh
