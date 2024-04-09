@@ -18,17 +18,16 @@ class ReviewTrendView(ListAPIView):
         """Filter top 5 categories with total review count, average stars."""
         top_category_count = 5  # No. of top categories to be filtered
 
+        # Gets the latest review for a particular review_id
+        latest_review_subquery = (
+            ReviewHistory.objects.filter(review_id=OuterRef("review__review_id"))
+            .order_by("-created_at")
+            .values("id")[:1]
+        )
+
         # Logic to get top categories based on average star rating
         top_categories_queryset = (
-            queryset.filter(
-                review_id=Subquery(
-                    ReviewHistory.objects.filter(id=OuterRef("review_id"))
-                    .order_by("-created_at")
-                    .values("id")[
-                        :1
-                    ]  # Gets the latest review for a particular review_id
-                )
-            )
+            queryset.filter(review_id=Subquery(latest_review_subquery))
             .values(
                 "category_id",
                 name=F("category__name"),
