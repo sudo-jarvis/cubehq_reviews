@@ -8,7 +8,8 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = ReviewHistory
         fields = '__all__'
 
-class LatestReviewSerializer(serializers.ModelSerializer):
+
+class ReviewDetailsSerializer(serializers.ModelSerializer):
     review = ReviewSerializer()
     
     class Meta:

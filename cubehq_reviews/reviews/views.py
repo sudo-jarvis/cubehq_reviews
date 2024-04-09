@@ -3,18 +3,18 @@ from rest_framework.generics import ListAPIView
 from rest_framework.pagination import CursorPagination
 
 from reviews.models import Metadata, ReviewHistory
-from reviews.serializers import TopCategorySerializer, LatestReviewSerializer
+from reviews.serializers import TopCategorySerializer, ReviewDetailsSerializer
 
 
 class ReviewTrendView(ListAPIView):
     """Lists Top Review Categories."""
-    
+
     serializer_class = TopCategorySerializer
     queryset = Metadata.objects
 
     def filter_queryset(self, queryset):
         """Filters the top 5 categories along with total review count and average stars."""
-        TOP_CATEGORY_COUNT = 5  # No. of top categories to be filtered
+        top_category_count = 5  # No. of top categories to be filtered
 
         # Logic to get top categories based on average star rating
         top_categories_queryset = (
@@ -33,17 +33,17 @@ class ReviewTrendView(ListAPIView):
                 description=F("category__description"),
             )
             .annotate(average_stars=Avg("review__stars"), total_reviews=Count("review"))
-            .order_by("-average_stars")[:TOP_CATEGORY_COUNT]
+            .order_by("-average_stars")[:top_category_count]
         )
         # This took a total of 2 django ORM queries(Including 1 Subquery)
         return top_categories_queryset
 
 
 class ReviewSearchPagination(CursorPagination):
-        """Sets pagination parameters for filtering reviews."""
+    """Sets pagination parameters for filtering reviews."""
 
-        page_size = 15
-        ordering = "-created_at"
+    page_size = 15
+    ordering = "-created_at"
 
 
 class CategoryReviewView(ListAPIView):
@@ -51,7 +51,7 @@ class CategoryReviewView(ListAPIView):
 
     pagination_class = ReviewSearchPagination
     queryset = Metadata.objects
-    serializer_class = LatestReviewSerializer
+    serializer_class = ReviewDetailsSerializer
 
     def filter_queryset(self, queryset):
         """
@@ -62,4 +62,6 @@ class CategoryReviewView(ListAPIView):
         category_id = self.request.GET.get("category_id")
         if category_id is not None:
             queryset = queryset.filter(category_id=category_id)
+            # This took 1 django ORM query
+
         return queryset.annotate(created_at=F("review__created_at"))

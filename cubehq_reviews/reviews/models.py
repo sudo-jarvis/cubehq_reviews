@@ -9,10 +9,12 @@ class ReviewHistory(models.Model):
     review_id = models.CharField(max_length=255)
     created_at = models.DateTimeField()
 
+
 class Category(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField()
+
 
 class Metadata(models.Model):
     id = models.BigAutoField(primary_key=True)
