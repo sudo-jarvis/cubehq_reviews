@@ -13,7 +13,7 @@ class ReviewHistory(models.Model):
         validators=[MaxValueValidator(5), MinValueValidator(0)]
     )
     review_id = models.CharField(max_length=255)
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Category(models.Model):
